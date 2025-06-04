@@ -20,18 +20,6 @@ export class P2WPKHSigner extends BaseSigner {
   }
 
   /**
-   * 获取SegWit特定信息
-   */
-  getSegWitInfo() {
-    return {
-      address: this.getAddress(),
-      publicKey: this.getPublicKey(),
-      addressType: 'P2WPKH' as const,
-      prefix: 'bc1q'
-    };
-  }
-
-  /**
    * P2WPKH签名器工厂
    */
   static factory: ISignerFactory<P2WPKHSigner> = {

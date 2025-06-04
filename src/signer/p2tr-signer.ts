@@ -20,18 +20,6 @@ export class P2TRSigner extends BaseSigner {
   }
 
   /**
-   * 获取Taproot特定信息
-   */
-  getTaprootInfo() {
-    return {
-      address: this.getAddress(),
-      publicKey: this.getPublicKey(),
-      addressType: 'P2TR' as const,
-      prefix: 'bc1p'
-    };
-  }
-
-  /**
    * P2TR签名器工厂
    */
   static factory: ISignerFactory<P2TRSigner> = {
