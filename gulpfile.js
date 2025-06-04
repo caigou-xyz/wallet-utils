@@ -1,9 +1,5 @@
 const gulp = require("gulp");
-const babel = require("gulp-babel");
-const webpack = require("webpack");
-const webpackStream = require("webpack-stream");
 const ts = require("gulp-typescript");
-const tsProject = ts.createProject("tsconfig.json");
 const SRC_PATH = "src";
 
 const BUILD_MODE = {
@@ -14,22 +10,35 @@ const BUILD_MODE = {
     PATH: "lib",
   },
 };
-const CURRENT_MODE = BUILD_MODE[process.env.BABEL_ENV.toUpperCase()];
+
+// TypeScript projects for different module systems
+const tsProjectCJS = ts.createProject("tsconfig.json", {
+  module: "commonjs",
+  outDir: "./lib"
+});
+
+const tsProjectESM = ts.createProject("tsconfig.json", {
+  module: "esnext",
+  moduleResolution: "node",
+  outDir: "./es",
+  declaration: false  // Only generate declarations in CJS build
+});
+
 gulp.task("build-esm", () => {
   return gulp
     .src([`${SRC_PATH}/**/*.ts`])
-    .pipe(babel())
-    .pipe(webpackStream(require("./webpack.config.js"), webpack))
+    .pipe(tsProjectESM())
     .pipe(gulp.dest(BUILD_MODE.ESM.PATH));
 });
 
 gulp.task("build-cjs", () => {
   return gulp
     .src([`${SRC_PATH}/**/*.ts`])
-    .pipe(tsProject())
+    .pipe(tsProjectCJS())
     .pipe(gulp.dest(BUILD_MODE.CJS.PATH));
 });
 
+const CURRENT_MODE = BUILD_MODE[process.env.BABEL_ENV?.toUpperCase()];
 if (CURRENT_MODE == BUILD_MODE.ESM) {
   gulp.task("build", gulp.series("build-esm"));
 } else if (CURRENT_MODE == BUILD_MODE.CJS) {
