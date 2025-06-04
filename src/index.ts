@@ -3,6 +3,7 @@ export * as core from './bitcoin-core';
 export * from './constants';
 export * as keyring from './keyring';
 export * as message from './message';
+export * as signer from './signer';
 export * as transaction from './transaction';
 export * as txHelpers from './tx-helpers';
 export * from './types';
